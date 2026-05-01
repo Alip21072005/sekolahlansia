@@ -1,309 +1,168 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
-import { 
-    Sparkles,
+import {
     Heart,
     Brain,
-    HandHeart,
-    Users,
     Palette,
+    Activity,
+    Users,
     Leaf,
-    Building2,
-    Award,
-    Shield,
-    Heart as HeartIcon,
-    Users as UsersIcon,
     Dumbbell,
-    ChevronRight,
-    Calendar,
-    ArrowRight,
-    PlayCircle,
-    MapPin
+    Sun,
+    MessageCircle,
+    Clock,
+    CheckCircle2
 } from 'lucide-vue-next';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 
-withDefaults(
-    defineProps<{
-        canRegister?: boolean;
-    }>(),
+// Program page - no registration
+
+// Data Program Kategori
+const programList = [
     {
-        canRegister: true,
+        kategori: 'Kesehatan Fisik',
+        ikon: Activity,
+        warna: 'text-blue-500',
+        bg: 'bg-blue-100',
+        program: [
+            { judul: 'Senam Sehat Lansia', deskripsi: 'Menjaga kelenturan sendi dan kebugaran jantung dengan gerakan ringan.', waktu: 'Setiap Senin & Kamis Pagi' },
+            { judul: 'Cek Kesehatan Rutin', deskripsi: 'Pemeriksaan tensi, gula darah, dan kolesterol oleh tenaga kesehatan desa.', waktu: 'Minggu Pertama Tiap Bulan' },
+        ]
     },
-);
-
-// Program SMART
-const smartProgram = [
-    { letter: 'S', title: 'Sehat', description: 'Kesehatan fisik dan mental yang optimal', icon: HeartIcon },
-    { letter: 'M', title: 'Mandiri', description: 'Mampu melakukan aktivitas secara mandiri', icon: Award },
-    { letter: 'A', title: 'Aktif', description: 'Tetap aktif secara sosial dan fisik', icon: UsersIcon },
-    { letter: 'R', title: 'Produktif', description: 'Terus menghasilkan karya dan manfaat', icon: Dumbbell },
-    { letter: 'T', title: 'Bermartabat', description: 'Hidup dengan penuh harga diri', icon: Shield },
+    {
+        kategori: 'Mental & Spiritual',
+        ikon: Brain,
+        warna: 'text-emerald-600',
+        bg: 'bg-emerald-100',
+        program: [
+            { judul: 'Kajian & Bimbingan Rohani', deskripsi: 'Memperdalam ilmu agama untuk ketenangan batin dan pikiran.', waktu: 'Setiap Jumat Pagi' },
+            { judul: 'Sesi Curhat & Sosialisasi', deskripsi: 'Ruang aman untuk bercerita dan berbagi pengalaman antar anggota.', waktu: 'Setiap Rabu Sore' },
+        ]
+    },
+    {
+        kategori: 'Keterampilan & Kreasi',
+        ikon: Palette,
+        warna: 'text-amber-600',
+        bg: 'bg-amber-100',
+        program: [
+            { judul: 'Kerajinan Tangan', deskripsi: 'Membuat karya seni dari bahan daur ulang yang bernilai ekonomis.', waktu: 'Setiap Selasa Siang' },
+            { judul: 'Kebun Mini Pintar', deskripsi: 'Belajar menanam tanaman obat keluarga (TOGA) dan sayuran organik.', waktu: 'Jadwal Fleksibel' },
+        ]
+    }
 ];
 
-// 7 Dimensi Lansia Tangguh dengan detail kegiatan
-const dimensiDetail = [
-    {
-        icon: Sparkles,
-        title: 'Dimensi Spiritual',
-        description: 'Pembinaan keagamaan, meditasi, dan ketenangan batin.',
-        kegiatan: ['Tahfidz Qur\'an', 'Doa bersama', 'Meditasi mindfulness', 'Kajian keagamaan'],
-        color: 'bg-purple-50 text-purple-600',
-        jadwal: 'Setiap Jumat, 08:00 - 10:00',
-    },
-    {
-        icon: Heart,
-        title: 'Dimensi Fisik',
-        description: 'Senam, pemeriksaan kesehatan, dan edukasi nutrisi.',
-        kegiatan: ['Senam lansia', 'Yoga ringan', 'Pemeriksaan kesehatan rutin', 'Kelas nutrisi sehat'],
-        color: 'bg-red-50 text-red-600',
-        jadwal: 'Senin & Rabu, 07:00 - 09:00',
-    },
-    {
-        icon: Brain,
-        title: 'Dimensi Intelektual',
-        description: 'Melatih daya ingat dan kognitif untuk mencegah pikun.',
-        kegiatan: ['Brain games', 'Teka-teki silang', 'Diskusi umum', 'Literasi digital'],
-        color: 'bg-blue-50 text-blue-600',
-        jadwal: 'Selasa & Kamis, 09:00 - 11:00',
-    },
-    {
-        icon: HandHeart,
-        title: 'Dimensi Emosional',
-        description: 'Sosialisasi untuk mencegah kesepian dan meningkatkan kesejahteraan.',
-        kegiatan: ['Konseling lansia', 'Sharing session', 'Support group', 'Kegiatan rekreasi'],
-        color: 'bg-rose-50 text-rose-600',
-        jadwal: 'Setiap hari kerja, 13:00 - 15:00',
-    },
-    {
-        icon: Users,
-        title: 'Dimensi Sosial Kemasyarakatan',
-        description: 'Bakti sosial dan keterlibatan dalam acara masyarakat.',
-        kegiatan: ['Bakti sosial', 'Gotong royong', 'Acara kemasyarakatan', 'Kunjungan ke panti'],
-        color: 'bg-orange-50 text-orange-600',
-        jadwal: 'Satu kali per bulan',
-    },
-    {
-        icon: Palette,
-        title: 'Dimensi Profesional Vokasional',
-        description: 'Keterampilan tangan dan hobi yang menghasilkan ekonomis.',
-        kegiatan: ['Kerajinan tangan', 'Menjahit', 'Memasak', 'Berkebun', 'Budidaya tanaman'],
-        color: 'bg-green-50 text-green-600',
-        jadwal: 'Selasa & Jumat, 13:00 - 16:00',
-    },
-    {
-        icon: Leaf,
-        title: 'Dimensi Lingkungan',
-        description: 'Menjaga kebersihan dan kelestarian lingkungan.',
-        kegiatan: ['Pemilahan sampah', 'Daur ulang', 'Tanaman hias', 'Kebersihan lingkungan'],
-        color: 'bg-emerald-50 text-emerald-600',
-        jadwal: 'Kamis, 08:00 - 10:00',
-    },
+// Data Manfaat
+const manfaatList = [
+    { judul: 'Menjaga Kebugaran Fisik', deskripsi: 'Aktivitas yang dirancang khusus aman untuk persendian dan otot lansia.', ikon: Dumbbell },
+    { judul: 'Mencegah Kepikunan', deskripsi: 'Stimulasi otak melalui kegiatan baru dan interaksi sosial yang rutin.', ikon: Brain },
+    { judul: 'Memperluas Persaudaraan', deskripsi: 'Bertemu teman sebayanya agar tidak merasa kesepian di rumah.', ikon: Users },
+    { judul: 'Meningkatkan Kebahagiaan', deskripsi: 'Menikmati masa tua dengan kegiatan yang positif, produktif, dan menyenangkan.', ikon: Sun },
 ];
 
-// Gallery Images from local folder
-const galleryImages = [
-    {
-        url: '/image/foto1.jpeg',
-        title: 'Kegiatan Lansia Bersama',
-        category: 'Program SMART'
-    },
-    {
-        url: '/image/foto2.jpeg',
-        title: 'Senam Lansia',
-        category: 'Dimensi Fisik'
-    },
-    {
-        url: '/image/foto3.jpeg',
-        title: 'Kerajinan Tangan',
-        category: 'Dimensi Vokasional'
-    },
-    {
-        url: '/image/foto4.jpeg',
-        title: 'Kegiatan Sosial',
-        category: 'Dimensi Sosial'
-    },
-];
-
-// Timeline Documentation with local images
-const timelineDokumentasi = [
-    {
-        judul: 'Pelatihan Literasi Digital',
-        tanggal: '15 Jan 2025',
-        kategori: 'Intelektual',
-        deskripsi: 'Peserta mempelajari penggunaan smartphone dan aplikasi modern untuk komunikasi dengan keluarga.',
-        image: '/image/foto5.jpeg'
-    },
-    {
-        judul: 'Senam Pagi Bersama',
-        tanggal: '10 Jan 2025',
-        kategori: 'Fisik',
-        deskripsi: 'Kegiatan senam rutin yang diikuti 50+ peserta untuk menjaga kebugaran dan silaturahmi.',
-        image: '/image/foto6.jpeg'
-    },
-    {
-        judul: 'Bakti Sosial ke Panti',
-        tanggal: '5 Jan 2025',
-        kategori: 'Sosial',
-        deskripsi: 'Kunjungan ke panti jompo untuk berbagi sembako dan hiburan bersama para lansia.',
-        image: '/image/foto7.jpeg'
-    },
-    {
-        judul: 'Workshop Kerajinan',
-        tanggal: '20 Des 2024',
-        kategori: 'Vokasional',
-        deskripsi: 'Pelatihan membuat kerajinan dari barang bekas yang bisa dijual untuk pendapatan tambahan.',
-        image: '/image/foto9.jpeg'
-    },
-];
+const kontakWhatsApp = 'https://wa.me/6281234567890'; // Ganti dengan nomor asli
 </script>
 
 <template>
-    <Head title="Program - Sekolah Lansia Merah Putih">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    </Head>
+    <Head title="Program Kami - Sekolah Lansia Merah Putih" />
 
-    <div class="min-h-screen bg-white">
-        <Navbar :can-register="canRegister" />
+    <div class="min-h-screen bg-slate-50 font-sans">
+        <Navbar />
 
-        <!-- Hero Section -->
-        <section class="relative min-h-[50vh] md:min-h-[60vh] flex items-center bg-red-700">
-            <div class="absolute inset-0">
-                <img src="/image/foto1.jpeg" alt="Program SMART" class="w-full h-full object-cover opacity-20" />
-            </div>
-            <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-                <div class="max-w-2xl">
-                    <span class="inline-flex items-center gap-2 bg-white/20 backdrop-blur text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
-                        <MapPin class="w-4 h-4" />
-                        Desa Pulai Payung, Kabupaten Mukomuko
-                    </span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                        Program <span class="text-yellow-300">SMART</span>
-                    </h1>
-                    <p class="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-                        Program pendidikan non-formal sepanjang hayat di bawah naungan BKKBN 
-                        melalui Bina Keluarga Lansia (BKL).
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium">Sehat</span>
-                        <span class="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium">Mandiri</span>
-                        <span class="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium">Aktif</span>
-                        <span class="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium">Produktif</span>
-                        <span class="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium">Bermartabat</span>
-                    </div>
+        <!-- Header Halaman -->
+        <section class="bg-white border-b border-slate-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">
+                <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-500 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                    <Heart class="w-4 h-4" />
+                    Pendidikan Sepanjang Hayat
                 </div>
-            </div>
-        </section>
-
-        <!-- SMART Program -->
-        <section class="py-16 md:py-20">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-12">
-                    <span class="text-red-600 font-semibold text-sm uppercase tracking-wide">Konsep Utama</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">Lima Pilar SMART</h2>
-                    <p class="text-gray-600 text-lg">Pengembangan lansia Indonesia yang tangguh dan berkualitas</p>
-                </div>
-
-                <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
-                    <Card v-for="item in smartProgram" :key="item.letter" class="border-0 shadow-md hover:shadow-lg transition-shadow">
-                        <CardContent class="p-6 text-center">
-                            <div class="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl font-bold text-white">{{ item.letter }}</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ item.title }}</h3>
-                            <p class="text-gray-600 text-sm">{{ item.description }}</p>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7 Dimensi -->
-        <section class="py-16 md:py-20 bg-gray-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-12">
-                    <span class="text-red-600 font-semibold text-sm uppercase tracking-wide">Program Lengkap</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">7 Dimensi Lansia Tangguh</h2>
-                    <p class="text-gray-600 text-lg">Pendekatan holistik untuk menciptakan lansia yang berkualitas</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-4 md:gap-6">
-                    <Card v-for="(dim, index) in dimensiDetail" :key="dim.title" class="border border-gray-100 hover:shadow-md transition-shadow">
-                        <CardContent class="p-5">
-                            <div class="flex items-start gap-4">
-                                <div :class="['w-12 h-12 rounded-xl flex items-center justify-center shrink-0', dim.color]">
-                                    <component :is="dim.icon" class="w-6 h-6" />
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-bold text-gray-900 mb-1">{{ dim.title }}</h3>
-                                    <p class="text-gray-600 text-sm mb-3">{{ dim.description }}</p>
-                                    <div class="flex flex-wrap gap-1 mb-3">
-                                        <span v-for="keg in dim.kegiatan.slice(0, 3)" :key="keg" 
-                                              class="px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-600">
-                                            {{ keg }}
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center gap-2 text-red-600 text-sm">
-                                        <Calendar class="w-4 h-4" />
-                                        <span class="font-medium">{{ dim.jadwal }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-        </section>
-
-        <!-- Kegiatan -->
-        <section class="py-16 md:py-20">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-12">
-                    <span class="text-red-600 font-semibold text-sm uppercase tracking-wide">Dokumentasi</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">Kegiatan & Aktivitas</h2>
-                    <p class="text-gray-600 text-lg">Momen berharga dalam perjalanan Sekolah Lansia Merah Putih</p>
-                </div>
-
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                    <div v-for="item in timelineDokumentasi" :key="item.judul" class="group">
-                        <div class="rounded-xl overflow-hidden shadow-md mb-3">
-                            <img :src="item.image" :alt="item.judul" class="w-full aspect-video object-cover group-hover:scale-105 transition-transform" />
-                        </div>
-                        <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded">{{ item.kategori }}</span>
-                        <h3 class="font-bold text-gray-900 mt-2 mb-1">{{ item.judul }}</h3>
-                        <p class="text-sm text-gray-600 mb-2">{{ item.deskripsi }}</p>
-                        <div class="flex items-center gap-1 text-xs text-gray-500">
-                            <Calendar class="w-3 h-3" />
-                            {{ item.tanggal }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="py-16 md:py-20 bg-red-600">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Bergabung dengan Program Kami</h2>
-                <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                    Jadilah bagian dari komunitas lansia tangguh di Desa Pulai Payung. 
-                    Daftar sekarang dan nikmati berbagai program pengembangan diri.
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight max-w-3xl mx-auto">
+                    Program Unggulan <span class="text-blue-500">Sekolah Lansia</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-600 mb-0 max-w-2xl mx-auto leading-relaxed">
+                    Kami merancang berbagai kegiatan yang menyesuaikan dengan kemampuan fisik dan kebutuhan batin para lansia di Desa Pulai Payung.
                 </p>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <Button class="bg-white text-red-600 hover:bg-gray-100 font-semibold px-8 py-3 h-auto">
-                        Daftar Sekarang
-                    </Button>
-                    <Button variant="outline" class="border-white text-white hover:bg-white/20 px-8 py-3 h-auto">
-                        Lihat Jadwal
-                    </Button>
+            </div>
+        </section>
+
+        <!-- Daftar Program Utama -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                
+                <div v-for="(kategori, index) in programList" :key="index" class="mb-16 last:mb-0">
+                    <!-- Judul Kategori -->
+                    <div class="flex items-center gap-4 mb-8">
+                        <div :class="`w-14 h-14 rounded-2xl flex items-center justify-center ${kategori.bg}`">
+                            <component :is="kategori.ikon" :class="`w-7 h-7 ${kategori.warna}`" />
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900">{{ kategori.kategori }}</h2>
+                    </div>
+
+                    <!-- Grid Program -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <Card v-for="(item, idx) in kategori.program" :key="idx" class="border-0 shadow-md hover:shadow-lg transition-all rounded-2xl overflow-hidden group">
+                            <CardContent class="p-6 sm:p-8">
+                                <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-500 transition-colors">
+                                    {{ item.judul }}
+                                </h3>
+                                <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                                    {{ item.deskripsi }}
+                                </p>
+                                <div class="flex items-center gap-2 text-slate-700 bg-slate-100 w-fit px-4 py-2 rounded-lg text-base font-medium">
+                                    <Clock class="w-5 h-5 text-blue-500" />
+                                    {{ item.waktu }}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Manfaat Bergabung (Benefit Section) -->
+        <section class="py-16 md:py-24 bg-blue-500 text-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Mengapa Harus Bergabung?</h2>
+                    <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
+                        Manfaat nyata yang dirasakan oleh para lansia yang aktif mengikuti program kami.
+                    </p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div v-for="(manfaat, index) in manfaatList" :key="index" class="text-center">
+                        <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
+                            <component :is="manfaat.ikon" class="w-10 h-10 text-white" />
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">{{ manfaat.judul }}</h3>
+                        <p class="text-blue-100 text-base leading-relaxed">{{ manfaat.deskripsi }}</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <Footer :can-register="canRegister" />
+        <!-- CTA Section (Call to Action) -->
+        <section class="py-16 md:py-24 bg-white border-t border-slate-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Mulai Harimu dengan Semangat Baru!</h2>
+                <p class="text-lg text-slate-600 mb-10 leading-relaxed">
+                    Punya pertanyaan mengenai jadwal atau ingin mendaftarkan orang tua/kakek/nenek Anda? Jangan ragu untuk menghubungi pengurus kami.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a :href="kontakWhatsApp" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto">
+                        <Button class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6 h-auto rounded-xl shadow-lg shadow-green-200">
+                            <MessageCircle class="w-6 h-6 mr-3" />
+                            Tanya via WhatsApp
+                        </Button>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <Footer />
     </div>
 </template>
